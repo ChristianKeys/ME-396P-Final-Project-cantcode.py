@@ -1,71 +1,80 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 import random as rd
+import heapq as hp
+from prm import prm
+from plot_map import plot_map
+from plot_path import plot_path
+from visualize_dynamic_planner import visualize_dynamic_planner 
 
 def djikstra(qinit, qgoal, edges, x_array, y_array):
 
-	N = len(x_array)
+	# Performing Djikstra's, minimizing the distances:
 
-	# Check if given graph is symmetric:
+	N = len(x_array) # How many nodes I have
 
-	j = 0
 
-	for i in range(len(x_array)):
+	predecessor = dict() # Dictionary that keeps of track of connectivity. 
+	shortest_distance = dict() # Dictionary that keeps track of shortest distances.
+	unvisited_nodes = list(np.arange(0, N)) # List of unvisited nodes.
 
-		edge = edges[i]
+	# All edges have to be infinity. 
 
-		for connection in edge:
+	for i in unvisited_nodes:
+		shortest_distance[i] = float("Inf")
 
-			if i not in edges[connection]:
+	# Set initial point to 0.
 
-				j += 1
+	shortest_distance[qinit] = 0
 
-	if j != 0:
-
-		print("asymmetric")
-
-	# Ignore symmetry issue for now!
-
-	# Move on to djikstra:
-
-	shortest_path = dict()
-	previous_nodes = dict()
-	unvisited_nodes = list(np.arange(0, N))
-
-	for i in range(N):
-
-		shortest_path[i] = float("Inf")
-
-	shortest_path[qinit] = 0 
+	# While there are univisted nodes:
 
 	while unvisited_nodes:
 
-		current_min_node = None
+		# Node that I am currently visiting:
+
+		minNode = None
+
+		# Choose which node to visit:
 
 		for node in unvisited_nodes:
 
-			if current_min_node == None:
+			if minNode is None:
+				minNode = node 
 
-				current_min_node = node
+			elif shortest_distance[node] < shortest_distance[minNode]:
+				minNode = node
 
-			elif shortest_path[node] < shortest_path[current_min_node]:
+		# Compare current minimum distance to new minimum distance and update if necessary:
 
-				current_min_node = node
+		for childNode, weight in edges[minNode].items():
 
-		neighbors = edges[current_min_node]
+			if weight + shortest_distance[minNode] < shortest_distance[childNode]:
 
-		for neighbor in neighbors:
+				shortest_distance[childNode] = weight + shortest_distance[minNode]
+				predecessor[childNode] = minNode
 
-			tentative_value = shortest_path[current_min_node] +  np.sqrt((x_array[current_min_node] - x_array[neighbor])**2 + (y_array[current_min_node] - y_array[neighbor])**2)
+		# Remove node that I just visited:
 
-			if tentative_value < shortest_path[neighbor]:
+		unvisited_nodes.remove(minNode)
 
-				shortest_path[neighbor] = tentative_value
+	# Reconstructing the path:
 
-				previous_nodes[neighbor] = current_min_node
+	currentNode = qgoal
+	path = []
 
-		unvisited_nodes.remove(current_min_node)
+	while currentNode != qinit:
 
-	print(qinit, qgoal, previous_nodes)
+		try:
 
-	return 0
+			path.insert(0, currentNode)
+			currentNode = predecessor[currentNode]
+
+		except KeyError:
+
+			print("Unreacheable Path")
+			break
+
+	path.insert(0, qinit)
+
+	return path
