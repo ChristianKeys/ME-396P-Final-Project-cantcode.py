@@ -6,7 +6,6 @@ Created on Thu Nov  3 14:24:50 2022
 @author: karanchawla
 	Modified: jameshous, scratcho
 """
-
 import random
 import numpy as np 
 import math 
@@ -118,7 +117,7 @@ class RRTFamilyPlanners():
         lastIndex = len(self.nodeList) -1
         path = self.getFinalCourse(lastIndex)
 
-        return path    
+        return path
 
     # Rewire new node which is perpendicular to a existing line  with previous node
     def rewire(self, newNode, nearInds):
@@ -245,7 +244,7 @@ class RRTFamilyPlanners():
             
         plt.plot(self.start.x, self.start.y, "xr")
         plt.plot(self.goal.x, self.goal.y, "xr")
-        plt.axis([-2, 15, -2, 15])
+        plt.axis([self.minrand, self.maxrand, self.minrand,self.maxrand])
         plt.grid(True)
         plt.pause(0.01)
 
@@ -268,13 +267,11 @@ def main():
                 [5, 7, 3, 1, "d"]]
 
     # Set Initial parameters
-    rrt = RRTFamilyPlanners(start = [0, 0], goal = [12, 10],
-              randArea = [-2, 15], obstacleList = obstacleList)
+    rrt = RRTFamilyPlanners(start = [0, 0], goal = [11, 7],
+              randArea = [-1, 14], obstacleList = obstacleList)
     path = rrt.RRTStarSearch(animation = show_animation)
 
     # Draw final path
-    
-    #fig, ax = plt.subplots()
     
     if show_animation:
         rrt.drawGraph()
