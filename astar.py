@@ -51,7 +51,7 @@ def astar(qinit, qgoal, edges, x_array, y_array):
 
 			if weight + shortest_distance[minNode] < shortest_distance[childNode]:
 
-				shortest_distance[childNode] = (weight + shortest_distance[minNode]) + 584594
+				shortest_distance[childNode] = (weight + shortest_distance[minNode]) + (m.sqrt(((((x_array[qgoal]) - (x_array[qinit]))**2)) + ((((y_array[qgoal]) - (y_array[qinit])))**2)))
 				predecessor[childNode] = minNode 
 
 		# Remove node that I just visited:
