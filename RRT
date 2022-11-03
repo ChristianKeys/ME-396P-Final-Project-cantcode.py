@@ -68,9 +68,7 @@ class RRTFamilyPlanners():
 ##################################################################################
 
     # Make a new node perpendicular to exist path with minimum distance
-    
-    
-    def 
+   
 	def RRTStarSearch(self, animation=True):
 		self.nodeList = [self.start]
 		iter = 1
