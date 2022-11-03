@@ -4,7 +4,7 @@
 Created on Thu Nov  3 14:24:50 2022
 
 @author: karanchawla
-	Modified: scratcho
+	Modified: jameshous, scratcho
 """
 
 import random
