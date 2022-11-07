@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov  7 13:29:09 2022
+
+@author: paul
+"""
+import random
+import numpy as np
+import math
+import copy
+import matplotlib.pyplot as plt
+
+def rrt(N=200, xlim=(0, 10), ylim=(0,10), k=6, obs = [], goal):
+            # Assume goal = [goal_x, goal_y]
+
+    def is_valid_nodes(p, obs):
+        eps = 0.25
+
+        for obstacle in obs:
+            if obstacle[4] == "d":
+                return True
+
+            else:
+                ob_x = (obstacle[0] - eps, obstacle[0] + obstacle[2] + eps)
+                ob_y = (obstacle[1] - eps, obstacle[1] + obstacle[3] + eps)
+                
+                if p[0] > ob_x[0] and p[0] < ob_x[1] and p[1] > ob_y[0] and p[1] < ob_y[1]:
+                    
+                    return False
+        
+        return True
+    
+    def getNearestListIndex(nodes, rnd):
+        goalSampleRate = 10
+        if random.randint(0,100) > goalSampleRate:
+            rnd = [random.uniform(xlim[0], xlim[1]),
+                   random.uniform(ylim[0], ylim[1])]
+            
+        else:
+            rnd = []
+    
+    def shortest_k_neighbors(p, cur_idx, k, x_array, y_array):
+        
+        
