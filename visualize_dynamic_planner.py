@@ -4,7 +4,11 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 from scipy.spatial import distance
 from functools import partial
 
-def visualize_dynamic_planner(qinit, qgoal, djikstra_path, obstacles, x_array, y_array, fig, ax):
+def init():
+
+	pass
+
+def visualize_dynamic_planner(qinit, qgoal, djikstra_path, static_obstacles, dynamic_obstacles, x_array, y_array, fig, ax):
 
 	def update_mobile(x_robot, y_robot, x_robot_len, y_robot_len, path, i):
 
@@ -28,23 +32,22 @@ def visualize_dynamic_planner(qinit, qgoal, djikstra_path, obstacles, x_array, y
 	plt.yticks(color='w')
 	ax.set_aspect(1)
 	plt.title("Continuous Representation")
-	tx = ax.text(1, -1, "Mobile Robot X-Pos: 1")
-	ty = ax.text(1, -2, "Mobile Robot Y-Pos: 1")
+	tx = ax.text(0, -0.5, "Mobile Robot X-Pos: 1")
+	ty = ax.text(0, -1, "Mobile Robot Y-Pos: 1")
 
 	# Initial positions:
 
-	for obstacle in obstacles:
+	for obstacle in static_obstacles:
 
-		if obstacle[4] == "d": 
+		color = "blue"
+		alpha = 1.0
+		ax.add_patch(plt.Rectangle((obstacle[0], obstacle[1]), obstacle[2], obstacle[3],
+		edgecolor = "black", facecolor = color, alpha=alpha))
 
-			color = "green"
-			alpha = 0.2
+	for obstacle in dynamic_obstacles:
 
-		else:
-
-			color = "blue"
-			alpha = 1.0
-
+		color = "green"
+		alpha = 0.2
 		ax.add_patch(plt.Rectangle((obstacle[0], obstacle[1]), obstacle[2], obstacle[3],
 		edgecolor = "black", facecolor = color, alpha=alpha))
 
@@ -59,20 +62,23 @@ def visualize_dynamic_planner(qinit, qgoal, djikstra_path, obstacles, x_array, y
 
 	x_path = np.array([])
 	y_path = np.array([])
+	speed = 0.1
 
 	for i in range(len(djikstra_path) - 1):
 
 		k1 = djikstra_path[i]
 		k2 = djikstra_path[i+1]
 
+		d = np.sqrt((x_array[k1] - x_array[k2])**2 + (y_array[k1] - y_array[k2])**2)
+
 		params = np.polyfit(np.array([x_array[k1], x_array[k2]]), np.array([y_array[k1], y_array[k2]]), deg=1)
 
-		x_range = np.linspace(x_array[k1], x_array[k2], 10)
-		y_range = np.linspace(y_array[k1], y_array[k2], 10)
+		x_range = np.linspace(x_array[k1], x_array[k2], int(d/speed))
+		y_range = np.linspace(y_array[k1], y_array[k2], int(d/speed))
 
 		y_line = x_range*params[0] + params[1]
 
-		plt.plot(x_range, y_line, color = "g", alpha=1.0, linewidth=2.0)
+		plt.plot([x_array[k1], x_array[k2]], [y_array[k1], y_array[k2]], color=color, alpha=1.0, zorder=2, lw=3.0)
 
 		x_path = np.concatenate((x_path, x_range), axis=0)
 		y_path = np.concatenate((y_path, y_line), axis=0)
@@ -99,9 +105,7 @@ def visualize_dynamic_planner(qinit, qgoal, djikstra_path, obstacles, x_array, y
 
 		return ax, tx, ty
 
-	anim = FuncAnimation(fig, func=partial(update_plot, x_robot=x_robot, y_robot=y_robot),
-	repeat=True, frames=np.arange(1,n_path), interval=50)
+	anim = FuncAnimation(fig, init_func=init, func=partial(update_plot, x_robot=x_robot, y_robot=y_robot),
+	repeat=True, frames=np.arange(0,n_path), interval=50)
 
-	#anim.save("python_simulator.gif", dpi=300, writer=PillowWriter(fps=25))
-
-	plt.show()
+	anim.save("python_simulator.gif", dpi=300, writer=PillowWriter(fps=25))

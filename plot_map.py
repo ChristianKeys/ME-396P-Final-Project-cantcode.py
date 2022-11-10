@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-def plot_map(edges, x_array, y_array, obstacles, fig, ax):
+def plot_map(edges, x_array, y_array, static_obstacles, dynamic_obstacles, fig, ax):
 
 	# ax = ax[0]
 	plt.sca(ax)
@@ -24,18 +24,17 @@ def plot_map(edges, x_array, y_array, obstacles, fig, ax):
 				plt.plot([x_array[j], x_array[idx]], [y_array[j], y_array[idx]],
 				color="k", alpha=0.2, zorder=1)
 
-	for obstacle in obstacles:
+	for obstacle in static_obstacles:
 
-		if obstacle[4] == "d": 
+		color = "blue"
+		alpha = 1.0
+		ax.add_patch(plt.Rectangle((obstacle[0], obstacle[1]), obstacle[2], obstacle[3],
+		edgecolor = "black", facecolor = color, alpha=alpha))
 
-			color = "green"
-			alpha = 0.2
+	for obstacle in dynamic_obstacles:
 
-		else:
-
-			color = "blue"
-			alpha = 1.0
-
+		color = "green"
+		alpha = 0.2
 		ax.add_patch(plt.Rectangle((obstacle[0], obstacle[1]), obstacle[2], obstacle[3],
 		edgecolor = "black", facecolor = color, alpha=alpha))
 
@@ -43,6 +42,7 @@ def plot_map(edges, x_array, y_array, obstacles, fig, ax):
 	plt.tick_params(left=False,bottom=False)
 	plt.xticks(color='w')
 	plt.yticks(color='w')
+	plt.axis([0, 10, 0, 10])
 	ax.set_aspect(1)
 
 	return fig, ax

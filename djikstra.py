@@ -7,7 +7,7 @@ from plot_map import plot_map
 from plot_path import plot_path
 from visualize_dynamic_planner import visualize_dynamic_planner 
 
-def djikstra(qinit, qgoal, edges, x_array, y_array):
+def djikstra(qinit, qgoal, edges, x_array, y_array, astar=False):
 
 	# Performing Djikstra's, minimizing the distances:
 
@@ -62,11 +62,13 @@ def djikstra(qinit, qgoal, edges, x_array, y_array):
 
 	currentNode = qgoal
 	path = []
+	total_cost = 0
 
 	while currentNode != qinit:
 
 		try:
 
+			total_cost += edges[currentNode][predecessor[currentNode]]
 			path.insert(0, currentNode)
 			currentNode = predecessor[currentNode]
 
@@ -77,4 +79,4 @@ def djikstra(qinit, qgoal, edges, x_array, y_array):
 
 	path.insert(0, qinit)
 
-	return path
+	return path, total_cost
