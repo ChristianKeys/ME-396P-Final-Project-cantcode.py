@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 nodes = []
 nodelist = []
-x_array = [0]
-y_array = [0]
+x_array = [0.5]
+y_array = [0.5]
 #deltaarray = []
 cost = []
 obs = []
@@ -44,16 +44,16 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
                     return False
         return True
     
-    def getNearestListIndex(nodes, xnew):
-        distanceList = [((node[0] - xnew[0])**2 + 
-                 (node[1] - xnew[1])**2)**(1/2) for node in nodes]
-        minIndex = distanceList.index(min(distanceList))
-        return minIndex
+    # def getNearestListIndex(nodes, xnew):
+    #     distanceList = [((node[0] - xnew[0])**2 + 
+    #              (node[1] - xnew[1])**2)**(1/2) for node in nodes]
+    #     minIndex = distanceList.index(min(distanceList))
+    #     return minIndex
 
     def getNewNode(theta, nearestNode):
         #newNode = copy.deepcopy(nearestNode)
-        A = delta * math.cos(theta) 
-        B = delta * math.sin(theta)
+        A = delta * math.cos(theta) + nearestNode[0]
+        B = delta * math.sin(theta) + nearestNode[1]
         newNode = (A,B)
         #newNode[0] = delta * math.cos(theta)
         #newNode[1] = delta * math.sin(theta)
@@ -63,9 +63,10 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
     
     def pNearest(x_array, y_array, p):
         delta_array = []
-        for i in range(len(nodelist)):
+        for i in range(len(x_array)):
             delta = np.sqrt((x_array[i] - p[0])**2 + (y_array[i] - p[1])**2)
             delta_array.append(delta)
+        
         
         minindex = delta_array.index(min(delta_array))
         nearest = min(delta_array)
@@ -94,29 +95,10 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
 
         return True
     
-    #maybe do not need
-    # def __CollisionCheck(newNode, obs):
-    #     eps = 0.25
-
-    #     for obstacle in obs:
-
-    #         if obstacle[4] == "d":
-
-    #             return True
-
-    #         else:
-
-    #             ob_x = (obstacle[0] - eps, obstacle[0] + obstacle[2] + eps)
-    #             ob_y = (obstacle[1] - eps, obstacle[1] + obstacle[3] + eps)
-
-    #             if newNode.x > ob_x[0] and newNode.x < ob_x[1] and newNode.y > ob_y[0] and newNode.y < ob_y[1]:
-
-    #                 return False
-    #     return True
-    #     return True
-
-    #def shortest_k_neighbors(p, cur_idx, k, x_array, y_array):
-    i = 0
+    i = 1
+    graph = dict()
+    graph[0] = dict()
+    
     
     while i < limit:
         
@@ -124,23 +106,37 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
         y = rd.uniform(ylim[0]+eps, ylim[1]-eps)
         p = (x,y)
         
-        nodelist.append(p)
-        x_array.append(p[0])
-        y_array.append(p[1])
+        if not is_valid_node(p, obs):
+            continue
         
-        if is_valid_node(p, obs):
             # Store point's coordinates:
-            pass
         #find nearest node
         minindex, nearest, delta_array = pNearest(x_array, y_array, p)
         
-        theta = math.atan2(p[1] - x_array[minindex], p[0] - y_array[minindex])
-        newNode = getNewNode(theta, p)
-        nodes.append(newNode)
-        if is_valid_edge(p, (x_array[minindex], y_array[minindex])):
-            pass
+        if not is_valid_edge(p, (x_array[minindex], y_array[minindex])):
+            continue
         
+        #nodelist.append(p)
+        #x_array.append(p[0])
+        #y_array.append(p[1])
+        
+        theta = math.atan2(p[1] - x_array[minindex], p[0] - y_array[minindex])
+        newNode = getNewNode(theta, (x_array[minindex], y_array[minindex]))
+        nodes.append(newNode)
+        x_array.append(newNode[0])
+        y_array.append(newNode[1])
+        
+        graph[i] = dict()
+        graph[i][minindex] = nearest
+        
+        if np.sqrt((x_array[-1] - goal[0])**2 + (y_array[-1] - goal[1])**2) < 0.05:
+            print("great success")
+            break
+        
+        #link = 
         i += 1
-    print(nodes)
-rrt([0,10], [0,10], 10, [], 0.5, [1,2])      
+    print(graph)    
+    return graph, x_array, y_array    
+    
+rrt([0,10], [0,10], 100, [], 0.5, [9.5, 9.5])      
         
