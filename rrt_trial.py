@@ -1,4 +1,4 @@
-import random
+import random as rd
 import numpy as np
 import math
 import copy
@@ -6,8 +6,12 @@ import matplotlib.pyplot as plt
 
 nodes = []
 nodelist = []
+x_array = [0]
+y_array = [0]
+#deltaarray = []
 cost = []
 obs = []
+eps = 0.25
 
 def rrt(xlim, ylim, limit, obs, delta, goal):
     
@@ -20,15 +24,15 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
     # if collision doesn't happen in extending the nearest node to the new node add it to the tree
     #check if we reached the goal 
     #run rrt
-    def randomPoint():
-        #goalSampleRate = 10
-        #if random.randint(0,100) > goalSampleRate:
-        xnew = [random.uniform(xlim[0], xlim[1]), 
-               random.uniform(ylim[0], ylim[1])]
+    # def randomPoint():
+    #     #goalSampleRate = 10
+    #     #if random.randint(0,100) > goalSampleRate:
+    #     xnew = [random.uniform(xlim[0], xlim[1]), 
+    #            random.uniform(ylim[0], ylim[1])]
         # else:
         #     rnd = [goal[0], goal[1]]
     #gets random point in free space
-    def is_valid_nodes(p, obs):
+    def is_valid_node(p, obs):
         eps = 0.25
         for obstacle in obs:
             if obstacle[4] == "d":
@@ -46,16 +50,26 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
         minIndex = distanceList.index(min(distanceList))
         return minIndex
 
-    def getNewNode(theta, nearind, nearestNode):
-        newNode = copy.deepcopy(nearestNode)
-
-        newNode[0] += delta * math.cos(theta)
-        newNode[1] += delta * math.sin(theta)
-        cost.append(delta)
-        newNode.parent = nearind 
+    def getNewNode(theta, nearestNode):
+        #newNode = copy.deepcopy(nearestNode)
+        A = delta * math.cos(theta) 
+        B = delta * math.sin(theta)
+        newNode = (A,B)
+        #newNode[0] = delta * math.cos(theta)
+        #newNode[1] = delta * math.sin(theta)
+        #cost.append(delta)
+        
         return newNode 
     
-    
+    def pNearest(x_array, y_array, p):
+        delta_array = []
+        for i in range(len(nodelist)):
+            delta = np.sqrt((x_array[i] - p[0])**2 + (y_array[i] - p[1])**2)
+            delta_array.append(delta)
+        
+        minindex = delta_array.index(min(delta_array))
+        nearest = min(delta_array)
+        return minindex, nearest, delta_array
     
     def is_valid_edge(p1, p2):
 
@@ -81,37 +95,52 @@ def rrt(xlim, ylim, limit, obs, delta, goal):
         return True
     
     #maybe do not need
-    def __CollisionCheck(newNode, obs):
-        eps = 0.25
+    # def __CollisionCheck(newNode, obs):
+    #     eps = 0.25
 
-        for obstacle in obs:
+    #     for obstacle in obs:
 
-            if obstacle[4] == "d":
+    #         if obstacle[4] == "d":
 
-                return True
+    #             return True
 
-            else:
+    #         else:
 
-                ob_x = (obstacle[0] - eps, obstacle[0] + obstacle[2] + eps)
-                ob_y = (obstacle[1] - eps, obstacle[1] + obstacle[3] + eps)
+    #             ob_x = (obstacle[0] - eps, obstacle[0] + obstacle[2] + eps)
+    #             ob_y = (obstacle[1] - eps, obstacle[1] + obstacle[3] + eps)
 
-                if newNode.x > ob_x[0] and newNode.x < ob_x[1] and newNode.y > ob_y[0] and newNode.y < ob_y[1]:
+    #             if newNode.x > ob_x[0] and newNode.x < ob_x[1] and newNode.y > ob_y[0] and newNode.y < ob_y[1]:
 
-                    return False
-        return True
-        return True
+    #                 return False
+    #     return True
+    #     return True
 
     #def shortest_k_neighbors(p, cur_idx, k, x_array, y_array):
     i = 0
+    
     while i < limit:
-        xnew = randomPoint()  
         
-        if is_valid_node(xnew, obs):
-			# Store point's coordinates:
-
-			x_array[i] = x
-			y_array[i] = y
-			i += 1
+        x = rd.uniform(xlim[0]+eps, xlim[1]-eps)
+        y = rd.uniform(ylim[0]+eps, ylim[1]-eps)
+        p = (x,y)
         
+        nodelist.append(p)
+        x_array.append(p[0])
+        y_array.append(p[1])
         
+        if is_valid_node(p, obs):
+            # Store point's coordinates:
+            pass
+        #find nearest node
+        minindex, nearest, delta_array = pNearest(x_array, y_array, p)
+        
+        theta = math.atan2(p[1] - x_array[minindex], p[0] - y_array[minindex])
+        newNode = getNewNode(theta, p)
+        nodes.append(newNode)
+        if is_valid_edge(p, (x_array[minindex], y_array[minindex])):
+            pass
+        
+        i += 1
+    print(nodes)
+rrt([0,10], [0,10], 10, [], 0.5, [1,2])      
         
