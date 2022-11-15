@@ -11,24 +11,28 @@ y_array = [0.5]
 eps = 0.25
 
 def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
+
+    """
+    Populates space with valid nodes and edges for path-planning algorithm
+        
+        Parameters:
+            
+            limit: number of iterations allowable
+            obstacles (list of lists): shape of static obstacles
+            goal (float 2-tuple): coordination of goal point
+            delta (float): distance between current and new node
+            xlim (float 2-tuple): environment x bounds
+            ylim (float 2-tuple): environment y bounds
+            
+        Returns: graph, x_array, y_array, path 
+        
+            graph (int-list dictionary): nodes' IDs and connectivities
+            x_array (N x 1 float array): nodes' x coodinates
+            y_array (N x 1 float array): nodes' y coodinates
+            path (N x 1 float array): node indices that make up the path
+            
+    """        
     
-    #xlim=(0, 10), ylim=(0,10), limit = 500, obs = [], delta=0.5, goal = []
-            # Assume goal = [goal_x, goal_y]
-    # get random point in the free space
-    # find closest node in the tree
-    # compute the position of the new node
-    # collision check
-    # if collision doesn't happen in extending the nearest node to the new node add it to the tree
-    #check if we reached the goal 
-    #run rrt
-    # def randomPoint():
-    #     #goalSampleRate = 10
-    #     #if random.randint(0,100) > goalSampleRate:
-    #     xnew = [random.uniform(xlim[0], xlim[1]), 
-    #            random.uniform(ylim[0], ylim[1])]
-        # else:
-        #     rnd = [goal[0], goal[1]]
-    #gets random point in free space
     def is_valid_node(p, obstacles, eps):
         """
         Determines whether a point is inside given obstacles.
@@ -54,14 +58,23 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
                 return False
 
         return True
-    
-    # def getNearestListIndex(nodes, xnew):
-    #     distanceList = [((node[0] - xnew[0])**2 + 
-    #              (node[1] - xnew[1])**2)**(1/2) for node in nodes]
-    #     minIndex = distanceList.index(min(distanceList))
-    #     return minIndex
 
     def getNewNode(theta, nearestNode, nearest):
+        
+        """
+        Creates new node along the same direction to the goal
+        
+            Parameters:
+                
+                theta (float): angle created by new node and closest node, relative to the x axis
+                nearestNode (float 2-tuple): nearest node to random new node
+                nearest (float): distance between nearest node and random new node
+            
+            Returns:
+                newNode (float 2-tuple): new node created
+                distance (float): distance between nearest node and random new node
+                
+        """
         
         if delta < nearest:
             A = delta * math.cos(theta) + nearestNode[0]
@@ -74,13 +87,27 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
 
 
         newNode = (A,B)
-        #newNode[0] = delta * math.cos(theta)
-        #newNode[1] = delta * math.sin(theta)
-        #cost.append(delta)
         
         return newNode, distance
     
     def pNearest(x_array, y_array, p):
+        
+        """
+        Finds the closest existing node to the randomly populated node
+        
+            Parameters:
+                
+                x_array (N x 1 list):
+                y_array (N x 1 list):
+                p (float 2-tuple):
+                
+            Returns:
+                
+                minindex (int): index of closest existing node to random new node
+                nearest (float): distance between nearest node and random new node
+                delta_array (1 x N list): list of distances from populated node to existing nodes
+        """
+        
         delta_array = []
         for i in range(len(x_array)):
             delta = np.sqrt((x_array[i] - p[0])**2 + (y_array[i] - p[1])**2)
@@ -93,18 +120,30 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
     
     def is_valid_edge(p1, p2):
 
-        # This needs better coding practices and better explanation.
+        """
+        Finds if the edge created is valid or not
+        
+            Parameters:
+                
+                p1 (float 2-tuple): coordinates of random new populated node
+                p2 (float 2-tuple): coodrinates of closest existing node
+            
+            Returns:
+                
+                True or False (bool)
+        """
 
         def ccw(p1,p2,p3):
+            
 
             return (p3[1]-p1[1])*(p2[0]-p1[0]) > (p2[1]-p1[1])*(p3[0]-p1[0])
 
         for obstacle in obstacles:
 
-            p3_l = (obstacle[0], obstacle[1])
-            p4_ll = (obstacle[0]+obstacle[2], obstacle[1])
-            p4_lr = (obstacle[0], obstacle[1]+obstacle[3])
-            p3_r = (obstacle[0]+obstacle[2], obstacle[1]+obstacle[3])
+            p3_l = (obstacle[0]-eps, obstacle[1]-eps)
+            p4_ll = (obstacle[0]+obstacle[2]+eps, obstacle[1]-eps)
+            p4_lr = (obstacle[0]-eps, obstacle[1]+obstacle[3]+eps)
+            p3_r = (obstacle[0]+obstacle[2]+eps, obstacle[1]+obstacle[3]+eps)
 
             if ccw(p1,p3_l,p4_lr) != ccw(p2,p3_l,p4_lr) and ccw(p1,p2,p3_l) != ccw(p1,p2,p4_lr): return False
             elif ccw(p1,p3_l,p4_ll) != ccw(p2,p3_l,p4_ll) and ccw(p1,p2,p3_l) != ccw(p1,p2,p4_ll): return False
@@ -116,7 +155,8 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
     i = 1
     graph = dict()
     graph[0] = dict()
-    
+    graph[0]["parent"] = None
+    pathfound = False
     
     while i < limit:
         
@@ -127,16 +167,11 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
         if not is_valid_node(p, obstacles, eps):
             continue
         
-            # Store point's coordinates:
         #find nearest node
         minindex, nearest, delta_array = pNearest(x_array, y_array, p)
         
         if not is_valid_edge(p, (x_array[minindex], y_array[minindex])):
             continue
-        
-        #nodelist.append(p)
-        #x_array.append(p[0])
-        #y_array.append(p[1])
         
         theta = math.atan2(p[1] - y_array[minindex], p[0] - x_array[minindex])
         newNode, nearest = getNewNode(theta, (x_array[minindex], y_array[minindex]), nearest)
@@ -144,28 +179,23 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
         x_array.append(newNode[0])
         y_array.append(newNode[1])
         
+        
         graph[i] = dict()
         graph[i][minindex] = nearest
+        graph[i]["parent"] = minindex
         
-        if np.sqrt((x_array[-1] - goal[0])**2 + (y_array[-1] - goal[1])**2) < 0.1:
+        if np.sqrt((x_array[-1] - goal[0])**2 + (y_array[-1] - goal[1])**2) < delta:
             print("great success")
+            pathfound = True
             break
-        
-        #link = 
+    
         i += 1
-
-    # Enforce symmetry:
-
-    for i in range(len(x_array)):
-
-        edge = graph[i]
-
-        for idx in edge:
-
-            if i not in graph[idx]:
-
-                graph[idx][i] = edge[idx]
-
-    return graph, x_array, y_array    
-         
-        
+    #find valid path
+    path = []
+    path.append(i)
+    if pathfound == True:
+        while graph[i]["parent"] != None:
+            i = graph[i]["parent"]
+            path.append(i)
+    print(path)      
+    return graph, x_array, y_array, path
