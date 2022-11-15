@@ -56,6 +56,9 @@ def djikstra(qinit, qgoal, edges, x_array, y_array, astar=False):
 
 		# Remove node that I just visited:
 
+		if minNode == qgoal:
+			break
+
 		unvisited_nodes.remove(minNode)
 
 	# Reconstructing the path:

@@ -4,15 +4,16 @@ import random as rd
 
 def prm(obstacles, N=200, xlim=(0, 10), ylim=(0, 10), k=6, eps=0.25):
 	"""
-	Populates space with valid nodes and edges for path-planning algorithms.
+	A simple implementation of PRM.
 
 		Parameters:
 
+			obstacles (list of lists): Shape of static obstacles.
 			N (int): Number of samples.
 			xlim (float 2-tuple): Enviroment x bounds.
 			ylim (float 2-tuple): Enviroment y bounds.
 			k (int): Maximum number of neighbors for each node.
-			obstacles (list of lists): Shape of static obstacles.
+			eps (float): Tolerance to obstacles.
 
 		Returns:
 
@@ -28,8 +29,8 @@ def prm(obstacles, N=200, xlim=(0, 10), ylim=(0, 10), k=6, eps=0.25):
 
 			Parameters:
 
-				p (float 2-tuple): x and y coordinates of the point.
-				obstacles (n x 5 list of lists): obstacles' properties.
+				p (float 2-tuple): Coordinates of the point.
+				obstacles (n x 5 list of lists): Obstacles' properties.
 
 			Returns:
 
@@ -104,10 +105,10 @@ def prm(obstacles, N=200, xlim=(0, 10), ylim=(0, 10), k=6, eps=0.25):
 
 		for obstacle in obstacles:
 
-			p3_l = (obstacle[0], obstacle[1])
-			p4_ll = (obstacle[0]+obstacle[2], obstacle[1])
-			p4_lr = (obstacle[0], obstacle[1]+obstacle[3])
-			p3_r = (obstacle[0]+obstacle[2], obstacle[1]+obstacle[3])
+			p3_l = (obstacle[0]-eps, obstacle[1]-eps)
+			p4_ll = (obstacle[0]+obstacle[2]+eps, obstacle[1]-eps)
+			p4_lr = (obstacle[0]-eps, obstacle[1]+obstacle[3]+eps)
+			p3_r = (obstacle[0]+obstacle[2]+eps, obstacle[1]+obstacle[3]+eps)
 
 			if ccw(p1,p3_l,p4_lr) != ccw(p2,p3_l,p4_lr) and ccw(p1,p2,p3_l) != ccw(p1,p2,p4_lr): return False
 			elif ccw(p1,p3_l,p4_ll) != ccw(p2,p3_l,p4_ll) and ccw(p1,p2,p3_l) != ccw(p1,p2,p4_ll): return False
@@ -166,8 +167,3 @@ def prm(obstacles, N=200, xlim=(0, 10), ylim=(0, 10), k=6, eps=0.25):
 				edges[idx][i] = edge[idx]
 
 	return edges, x_array, y_array
-
-
-
-
-

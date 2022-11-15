@@ -4,32 +4,27 @@ import math
 import copy
 import matplotlib.pyplot as plt
 
-nodes = []
-nodelist = []
-x_array = [0.5]
-y_array = [0.5]
-eps = 0.25
-
-def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
-
+def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), eps=0.25):
     """
-    Populates space with valid nodes and edges for path-planning algorithm
+    A simple implementation of RRT.
         
         Parameters:
             
-            limit: number of iterations allowable
-            obstacles (list of lists): shape of static obstacles
-            goal (float 2-tuple): coordination of goal point
-            delta (float): distance between current and new node
-            xlim (float 2-tuple): environment x bounds
-            ylim (float 2-tuple): environment y bounds
+            limit (int): Maximum number of iterations allowed.
+            obstacles (list of lists): Shape of static obstacles.
+            start (float 2-tuple): Coordinates of start.
+            goal (float 2-tuple): Coordinates of goal.
+            delta (float): Distance between current and new node.
+            xlim (float 2-tuple): Environment x bounds.
+            ylim (float 2-tuple): Environment y bounds.
+            eps (float): Tolerance to obstacles.
             
         Returns: graph, x_array, y_array, path 
         
-            graph (int-list dictionary): nodes' IDs and connectivities
-            x_array (N x 1 float array): nodes' x coodinates
-            y_array (N x 1 float array): nodes' y coodinates
-            path (N x 1 float array): node indices that make up the path
+            graph (int-list dictionary): Nodes' IDs and connectivities.
+            x_array (N x 1 float array): Nodes' x coodinates.
+            y_array (N x 1 float array): Nodes' y coodinates.
+            path (N x 1 float array): Node indices that make up the path.
             
     """        
     
@@ -39,8 +34,8 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
 
             Parameters:
 
-                p (float 2-tuple): x and y coordinates of the point.
-                obstacles (n x 5 list of lists): obstacles' properties.
+                p (float 2-tuple): Coordinates of the point.
+                obstacles (n x 5 list of lists): Obstacles' properties.
 
             Returns:
 
@@ -113,7 +108,6 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
             delta = np.sqrt((x_array[i] - p[0])**2 + (y_array[i] - p[1])**2)
             delta_array.append(delta)
         
-        
         minindex = delta_array.index(min(delta_array))
         nearest = min(delta_array)
         return minindex, nearest, delta_array
@@ -152,11 +146,14 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
 
         return True
     
-    i = 1
     graph = dict()
     graph[0] = dict()
     graph[0]["parent"] = None
     pathfound = False
+    x_array = [start[0]]
+    y_array = [start[1]]
+
+    i = 1
     
     while i < limit:
         
@@ -167,7 +164,7 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
         if not is_valid_node(p, obstacles, eps):
             continue
         
-        #find nearest node
+        # Find nearest node:
         minindex, nearest, delta_array = pNearest(x_array, y_array, p)
         
         if not is_valid_edge(p, (x_array[minindex], y_array[minindex])):
@@ -175,7 +172,6 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
         
         theta = math.atan2(p[1] - y_array[minindex], p[0] - x_array[minindex])
         newNode, nearest = getNewNode(theta, (x_array[minindex], y_array[minindex]), nearest)
-        nodes.append(newNode)
         x_array.append(newNode[0])
         y_array.append(newNode[1])
         
@@ -185,17 +181,21 @@ def rrt(limit, obstacles, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10)):
         graph[i]["parent"] = minindex
         
         if np.sqrt((x_array[-1] - goal[0])**2 + (y_array[-1] - goal[1])**2) < delta:
-            print("great success")
             pathfound = True
             break
     
         i += 1
-    #find valid path
+
+    # If available, backtrack to find path:
+
     path = []
-    path.append(i)
     if pathfound == True:
+        path.append(i)
         while graph[i]["parent"] != None:
             i = graph[i]["parent"]
             path.append(i)
-    print(path)      
+    path.reverse()
+
     return graph, x_array, y_array, path
+         
+        

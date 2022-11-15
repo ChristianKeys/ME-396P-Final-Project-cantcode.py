@@ -1,73 +1,96 @@
+# Test 1 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
+# It also makes extensive use our own plotting and animation functions to visualize the results.
+
+# Python standard libraries:
+
 import matplotlib.pyplot as plt
 import random as rd
+import time
+
+# Our implementations of common path-planning algorithms:
+
 from rrt import rrt
 from prm import prm
-from pick_endpoints import pick_endpoints
-from plot_map import plot_map
-from plot_path import plot_path
 from djikstra import djikstra
-from remove_nodes import remove_nodes
+
+# Plotting functions:
+
+from plot_obstacles import plot_obstacles
+from plot_graph import plot_graph
+from plot_path import plot_path
+
+# Auxiliary functions:
+
+from pick_endpoints import pick_endpoints
+
+# Dynamic visualizer, leading into Test 2 material:
+
 from visualize_dynamic_planner import visualize_dynamic_planner
 
 if __name__ == "__main__":
 
-    static_obstacles = [[1, 1, 2.5, 2.5],
-                       [4, 7, 1, 1],
-                       [8, 3, 1, 5]]
+	# Define obstacles:
 
-    dynamic_obstacles = [[5, 7, 3, 1, "d"]]
+	static_obstacles = [[1, 1, 2.5, 2.5],
+					   [4, 7, 1, 1],
+					   [8, 3, 1, 5]]
 
-    #fig1, ax = plt.subplots(1,1)
+	dynamic_obstacles = [[5, 7, 3, 1, "d"]]
 
-    #edges, x_array, y_array = prm(static_obstacles, N=500, k=6) 
-    
-    #plot_map(edges, x_array, y_array, static_obstacles, dynamic_obstacles, fig1, ax) 
+	# Test RRT:
 
-    fig1, ax = plt.subplots(1,1)
-    #edges, x_array, y_array = prm(static_obstacles, N=500, k=6) 
-    edges, x_array, y_array, path = rrt(500, static_obstacles, (5, 5), delta=0.5)
+	print("Running RRT...")
+	begin = time.time()
 
-    #print(edges)
+	graph, x_array, y_array, path = rrt(500, static_obstacles, (0.5, 0.5), (9.5, 9.5), delta=0.5, eps=0.25)
 
-    plot_map(edges, x_array, y_array, static_obstacles, dynamic_obstacles, fig1, ax)
+	# Plotting RRT:
 
-    #path, total_cost = djikstra(0, -1, edges, x_array, y_array)
+	fig1, ax1 = plt.subplots(1,1)
+	plot_obstacles(static_obstacles, dynamic_obstacles, ax1)
+	plot_graph(graph, x_array, y_array, ax1)
+	plot_path(path, x_array, y_array, ax1)
+	plt.title("RRT")
 
-    fig2, ax = plt.subplots(1,1)
+	end = time.time()
+	if path:
+		print("Done! Time taken: " + "{:.2f}".format(end-begin) + "s. Path found!") 
+	else:
+		print("Done! Time taken: " + "{:.2f}".format(end-begin) + "s. No path found!") 
 
-    #qinit, qgoal = pick_endpoints((2,0), (10,10), x_array, y_array)
+	# Test PRM:
 
-    #print(qinit, qgoal)
+	graph, x_array, y_array = prm(static_obstacles, N=500, k=6)
+	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array) 
+	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array)
 
-    #path, total_cost = djikstra(0, len(x_array)-1, edges, x_array, y_array)
+	# Plotting PRM:
 
-    plot_path(path, x_array, y_array, static_obstacles, dynamic_obstacles, fig2, ax, "g")
+	print("Running PRM...")
+	begin = time.time()
 
-    #qinit, qfinal = pick_endpoints((2,0), (10,10), x_array, y_array)
+	fig2, ax2 = plt.subplots(1,1)
+	plot_obstacles(static_obstacles, dynamic_obstacles, ax2)
+	plot_graph(graph, x_array, y_array, ax2)
+	plot_path(path, x_array, y_array, ax2)
+	plt.title("PRM")
 
-    
+	end = time.time()
+	print("Done! Time taken: " + "{:.2f}".format(end-begin) + "s. Path found!") 
 
-#     plot_map(edges, x_array, y_array, static_obstacles, dynamic_obstacles, fig1, ax)
+	# Test dynamic visualizer using PRM result:
 
-#     fig2, ax = plt.subplots(1,1)
+	print("Running animation...")
+	begin = time.time()
 
-#     path1, total_cost_1 = djikstra(qinit, qfinal, edges, x_array, y_array)
+	fig3, ax3 = plt.subplots(1,1)
+	plot_obstacles(static_obstacles, dynamic_obstacles, ax3)
+	plot_path(path, x_array, y_array, ax3)
 
-#     edges = remove_nodes(edges, x_array, y_array, dynamic_obstacles)
+	# Testing dynamic visualization using PRM result:
 
-#     path2, total_cost_2 = djikstra(qinit, qfinal, edges, x_array, y_array)
-
-#     plot_path(path1, x_array, y_array, static_obstacles, dynamic_obstacles, fig2, ax, "g")
-#     plot_path(path2, x_array, y_array, static_obstacles, dynamic_obstacles, fig2, ax, "k")
-
-#     #print("Djikstra: ", total_cost_1)
-#     #print("AStar: ", total_cost_2)
-
-    fig3, ax = plt.subplots(1,1)
-#     #fig4, ax = plt.subplots(1,1)
-
-    visualize_dynamic_planner(0, len(x_array)-1, path, static_obstacles, dynamic_obstacles, x_array, y_array, fig3, ax)
-
-#     
-
-    plt.show()
+	visualize_dynamic_planner(qinit, qgoal, path, x_array, y_array, fig3, ax3)
+	end = time.time()
+	print("Done! Time taken: " + "{:.2f}".format(end-begin) + "s. Results being displayed...") 
+	plt.show()
+	print("Script terminated!")
