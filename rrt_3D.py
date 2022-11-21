@@ -81,6 +81,7 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
             Parameters:
                 
                 theta (float): angle created by new node and closest node, relative to the x axis
+                gamma (flaot): angle created by new node and closest node, relative to the xy plane
                 nearestNode (float 2-tuple): nearest node to random new node
                 nearest (float): distance between nearest node and random new node
             
@@ -91,13 +92,13 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
         """
 
         if delta < nearest:
-            A = delta * math.cos(theta) + nearestNode[0]
-            B = delta * math.sin(theta) + nearestNode[1]
+            A = delta * math.cos(gamma) * math.cos(theta) + nearestNode[0]
+            B = delta * math.cos(gamma) * math.sin(theta) + nearestNode[1]
             C = delta * math.sin(gamma) + nearestNode[2]
             distance = delta
         else:
-            A = nearest * math.cos(theta) + nearestNode[0]
-            B = nearest * math.sin(theta) + nearestNode[1]
+            A = nearest * math.cos(gamma) * math.cos(theta) + nearestNode[0]
+            B = nearest * math.cos(gamma) * math.sin(theta) + nearestNode[1]
             C = nearest * math.sin(gamma) + nearestNode[2]
             distance = nearest
 
@@ -162,6 +163,18 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
                 # [ x-axis /  'l': left,   'r': right ]
             
             # Generating vertex lists of the obstacles
+            
+            """
+            obstacle_vertex_lists[0] = left,  down, bottom
+            obstacle_vertex_lists[1] = left,  down, top
+            obstacle_vertex_lists[2] = left,  up,   bottom
+            obstacle_vertex_lists[3] = left,  up,   top
+            obstacle_vertex_lists[4] = right, down, bottom
+            obstacle_vertex_lists[5] = right, down, top
+            obstacle_vertex_lists[6] = right, up,   bottom
+            obstacle_vertex_lists[7] = right, up,   top
+            """
+
             obstacle_vertex_lists = []
             demension = 3
             
@@ -186,25 +199,35 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
                         obstacle_vertex_lists.append(vertex)
                         
             ###### Start from here #####
-            """
-            obstacle_vertex_lists[0] = left,  down, bottom
-            obstacle_vertex_lists[1] = left,  down, top
-            obstacle_vertex_lists[2] = left,  up,   bottom
-            obstacle_vertex_lists[3] = left,  up,   top
-            obstacle_vertex_lists[4] = right, down, bottom
-            obstacle_vertex_lists[5] = right, down, top
-            obstacle_vertex_lists[6] = right, up,   bottom
-            obstacle_vertex_lists[7] = right, up,   top
-            """
-
-            # if ccw(p1,p3_lower_left,p3_higher_left) != ccw(p2,p3_lower_left,p3_higher_left) and ccw(p1,p2,p3_lower_left) != ccw(p1,p2,p3_higher_left): return False
-            # elif ccw(p1,p3_lower_left,p3_lower_right) != ccw(p2,p3_lower_left,p3_lower_right) and ccw(p1,p2,p3_lower_left) != ccw(p1,p2,p3_lower_right): return False
-            # elif ccw(p1,p3_higher_right,p3_lower_right) != ccw(p2,p3_higher_right,p3_lower_right) and ccw(p1,p2,p3_higher_right) != ccw(p1,p2,p3_lower_right): return False
-            # elif ccw(p1,p3_higher_right,p3_higher_left) != ccw(p2,p3_higher_right,p3_higher_left) and ccw(p1,p2,p3_higher_right) != ccw(p1,p2,p3_higher_left): return False
-            # elif ccw(): return False
-            # elif ccw(): return False
             
-        return True
+            # Definition of checking if the edge passes through the face of the obstacles on the plane between two axis
+            
+            """
+            p1: start point of the edge
+            p2: end point of the edge
+            obv1: axis1_low, axis2_low
+            obv2: axis1_low, axis2_high
+            obv3: axis1_high, axis2_low
+            obv4: axis1_high, axis2_high
+            """
+            def faceCheck(p1, p2, obv1, obv2, obv3, obv4):
+                if ccw(p1,obv1,obv2) != ccw(p2,obv1,obv2) and ccw(p1,p2,obv1) != ccw(p1,p2,obv2): return False
+                elif ccw(p1,obv1,obv3) != ccw(p2,obv1,obv3) and ccw(p1,p2,obv1) != ccw(p1,p2,obv3): return False
+                elif ccw(p1,obv4,obv3) != ccw(p2,obv4,obv3) and ccw(p1,p2,obv4) != ccw(p1,p2,obv3): return False
+                elif ccw(p1,obv4,obv2) != ccw(p2,obv4,obv2) and ccw(p1,p2,obv4) != ccw(p1,p2,obv2): return False
+            
+            return True
+
+            # Checking the edge is inside the hexahedron
+            if faceCheck(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[1], obstacle_vertex_lists[2], obstacle_vertex_lists[3]) == True:
+                return True
+            elif faceCheck(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[1], obstacle_vertex_lists[4], obstacle_vertex_lists[5]) == True:
+                return True
+            elif faceCheck(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[2], obstacle_vertex_lists[4], obstacle_vertex_lists[6]) == True:
+                return True
+            else:
+                return False
+    
     
     graph = dict()
     graph[0] = dict()
@@ -220,7 +243,8 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
         
         x = rd.uniform(xlim[0]+eps, xlim[1]-eps)
         y = rd.uniform(ylim[0]+eps, ylim[1]-eps)
-        p = (x,y)
+        z = rd.uniform(zlim[0]+eps, zlim[1]-eps)
+        p = (x,y,z)
         
         if not is_valid_node(p, obstacles, eps):
             continue
@@ -260,5 +284,3 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
     path.reverse()
 
     return graph, x_array, y_array, z_array, path
-         
-        
