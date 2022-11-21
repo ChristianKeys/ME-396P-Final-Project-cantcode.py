@@ -42,14 +42,14 @@ if __name__ == "__main__":
 	print("Running RRT...")
 	begin = time.time()
 
-	graph, x_array, y_array, path = rrt(500, static_obstacles, (0.5, 0.5), (9.5, 9.5), delta=0.5, eps=0.25)
+	graph, x_array, y_array, path = rrt(1000, static_obstacles, (0.5, 0.5), (9.5, 9.5), delta=0.5, eps=0.25)
 
 	# Plotting RRT:
 
 	fig1, ax1 = plt.subplots(1,1)
 	plot_obstacles(static_obstacles, dynamic_obstacles, ax1)
 	plot_graph(graph, x_array, y_array, ax1)
-	plot_path(path, x_array, y_array, ax1)
+	plot_path(path, x_array, y_array, "g", ax1)
 	plt.title("RRT")
 
 	end = time.time()
@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
 	# Test PRM:
 
-	graph, x_array, y_array = prm(static_obstacles, N=500, k=6)
+	graph, x_array, y_array = prm(static_obstacles, N=500, k=5)
 	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array) 
 	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array)
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
 	fig2, ax2 = plt.subplots(1,1)
 	plot_obstacles(static_obstacles, dynamic_obstacles, ax2)
 	plot_graph(graph, x_array, y_array, ax2)
-	plot_path(path, x_array, y_array, ax2)
+	plot_path(path, x_array, y_array, "g", ax2)
 	plt.title("PRM")
 
 	end = time.time()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
 	fig3, ax3 = plt.subplots(1,1)
 	plot_obstacles(static_obstacles, dynamic_obstacles, ax3)
-	plot_path(path, x_array, y_array, ax3)
+	plot_path(path, x_array, y_array, "g", ax3)
 
 	# Testing dynamic visualization using PRM result:
 

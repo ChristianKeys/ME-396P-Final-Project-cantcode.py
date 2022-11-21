@@ -19,7 +19,7 @@ def remove_nodes(edges, x_array, y_array, obstacles):
 
 		"""
 
-		eps = 0.25
+		eps = 0.35
 
 		for obstacle in obstacles:
 
