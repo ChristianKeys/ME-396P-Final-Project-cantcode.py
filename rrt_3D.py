@@ -150,9 +150,36 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
                 True or False (bool)
         """
 
-        def ccw(p1,p2,p3):
-
+        def ccw_xy(p1,p2,p3):
             return (p3[1]-p1[1])*(p2[0]-p1[0]) > (p2[1]-p1[1])*(p3[0]-p1[0])
+        
+        def ccw_xz(p1,p2,p3):
+            return (p3[2]-p1[2])*(p2[0]-p1[0]) > (p2[2]-p1[2])*(p3[0]-p1[0])
+        
+        def ccw_yz(p1,p2,p3):
+            return (p3[2]-p1[2])*(p2[1]-p1[1]) > (p2[2]-p1[2])*(p3[1]-p1[1])
+        
+        # Definition of checking if the edge passes through the face of the obstacles on the plane between two axis
+        def faceCheck_xy(p1, p2, obv1, obv2, obv3, obv4): # Checking the projeciton to the xy plane
+            if ccw_xy(p1,obv1,obv2) != ccw_xy(p2,obv1,obv2) and ccw_xy(p1,p2,obv1) != ccw_xy(p1,p2,obv2): return False
+            elif ccw_xy(p1,obv1,obv3) != ccw_xy(p2,obv1,obv3) and ccw_xy(p1,p2,obv1) != ccw_xy(p1,p2,obv3): return False
+            elif ccw_xy(p1,obv4,obv3) != ccw_xy(p2,obv4,obv3) and ccw_xy(p1,p2,obv4) != ccw_xy(p1,p2,obv3): return False
+            elif ccw_xy(p1,obv4,obv2) != ccw_xy(p2,obv4,obv2) and ccw_xy(p1,p2,obv4) != ccw_xy(p1,p2,obv2): return False
+            return True
+    
+        def faceCheck_xz(p1, p2, obv1, obv2, obv3, obv4): # Checking the projeciton to the xz plane
+            if ccw_xz(p1,obv1,obv2) != ccw_xz(p2,obv1,obv2) and ccw_xz(p1,p2,obv1) != ccw_xz(p1,p2,obv2): return False
+            elif ccw_xz(p1,obv1,obv3) != ccw_xz(p2,obv1,obv3) and ccw_xz(p1,p2,obv1) != ccw_xz(p1,p2,obv3): return False
+            elif ccw_xz(p1,obv4,obv3) != ccw_xz(p2,obv4,obv3) and ccw_xz(p1,p2,obv4) != ccw_xz(p1,p2,obv3): return False
+            elif ccw_xz(p1,obv4,obv2) != ccw_xz(p2,obv4,obv2) and ccw_xz(p1,p2,obv4) != ccw_xz(p1,p2,obv2): return False
+            return True
+    
+        def faceCheck_yz(p1, p2, obv1, obv2, obv3, obv4): # Checking the projeciton to the yz plane
+            if ccw_yz(p1,obv1,obv2) != ccw_yz(p2,obv1,obv2) and ccw_yz(p1,p2,obv1) != ccw_yz(p1,p2,obv2): return False
+            elif ccw_yz(p1,obv1,obv3) != ccw_yz(p2,obv1,obv3) and ccw_yz(p1,p2,obv1) != ccw_yz(p1,p2,obv3): return False
+            elif ccw_yz(p1,obv4,obv3) != ccw_yz(p2,obv4,obv3) and ccw_yz(p1,p2,obv4) != ccw_yz(p1,p2,obv3): return False
+            elif ccw_yz(p1,obv4,obv2) != ccw_yz(p2,obv4,obv2) and ccw_yz(p1,p2,obv4) != ccw_yz(p1,p2,obv2): return False
+            return True
 
 
         for obstacle in obstacles:
@@ -197,11 +224,7 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
                             iteration_num += 1
                             
                         obstacle_vertex_lists.append(vertex)
-                        
-            ###### Start from here #####
-            
-            # Definition of checking if the edge passes through the face of the obstacles on the plane between two axis
-            
+        
             """
             p1: start point of the edge
             p2: end point of the edge
@@ -210,23 +233,20 @@ def rrt(limit, obstacles, start, goal, delta=0.1, xlim=(0, 10), ylim=(0, 10), zl
             obv3: axis1_high, axis2_low
             obv4: axis1_high, axis2_high
             """
-            def faceCheck(p1, p2, obv1, obv2, obv3, obv4):
-                if ccw(p1,obv1,obv2) != ccw(p2,obv1,obv2) and ccw(p1,p2,obv1) != ccw(p1,p2,obv2): return False
-                elif ccw(p1,obv1,obv3) != ccw(p2,obv1,obv3) and ccw(p1,p2,obv1) != ccw(p1,p2,obv3): return False
-                elif ccw(p1,obv4,obv3) != ccw(p2,obv4,obv3) and ccw(p1,p2,obv4) != ccw(p1,p2,obv3): return False
-                elif ccw(p1,obv4,obv2) != ccw(p2,obv4,obv2) and ccw(p1,p2,obv4) != ccw(p1,p2,obv2): return False
-            
-            return True
-
+        
             # Checking the edge is inside the hexahedron
-            if faceCheck(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[1], obstacle_vertex_lists[2], obstacle_vertex_lists[3]) == True:
-                return True
-            elif faceCheck(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[1], obstacle_vertex_lists[4], obstacle_vertex_lists[5]) == True:
-                return True
-            elif faceCheck(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[2], obstacle_vertex_lists[4], obstacle_vertex_lists[6]) == True:
-                return True
-            else:
+             # Checking xy plane
+            xyCheck = faceCheck_xy(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[2], obstacle_vertex_lists[4], obstacle_vertex_lists[6])
+             # Checking xz plane
+            xzCheck = faceCheck_xz(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[1], obstacle_vertex_lists[4], obstacle_vertex_lists[5])
+             # Checking yz plane
+            yzCheck = faceCheck_yz(p1, p2, obstacle_vertex_lists[0], obstacle_vertex_lists[1], obstacle_vertex_lists[2], obstacle_vertex_lists[3])
+            
+            if xyCheck == False and xzCheck == False and yzCheck == False:
                 return False
+            
+        # If none of the face projection to the plane isn't overlap the edge return 'True' 
+        return True
     
     
     graph = dict()
