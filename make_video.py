@@ -3,13 +3,13 @@ import numpy as np
 import glob
 import os
 
-def make_video():
+def make_video(path):
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
 	frames = []
 
-	for filename in sorted(glob.glob(CURR_DIR + "/PRM_Images/*.png"), key=os.path.getmtime):
+	for filename in sorted(glob.glob(CURR_DIR + path), key=os.path.getmtime):
 		new_frame = Image.open(filename)
 		frames.append(new_frame)
 
@@ -17,4 +17,4 @@ def make_video():
 
 if __name__ == "__main__":
 
-	make_video()
+	make_video("/PRM_Images/*.png")

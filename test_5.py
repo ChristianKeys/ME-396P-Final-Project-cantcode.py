@@ -34,8 +34,6 @@ from make_video import make_video
 
 from visualize_dynamic_planner import visualize_dynamic_planner
 
-i = 0
-
 if __name__ == "__main__":
 
 	# Define obstacles:
@@ -50,26 +48,50 @@ if __name__ == "__main__":
 					   [5.5, 9, 2, 1],
 					   [9, 7, 1, 3]]
 
-	dynamic_obstacles = [[5, 5, 1, 1]]
+	# Cars going right: (space them out by 2)
+
+	dynamic_obstacles = []
+
+	for i in range(10):
+
+		car = [2*(i-2), 5.5, 0.5 , 0.25]
+		dynamic_obstacles.append(car)
+
+	for i in range(10):
+
+		car = [2*(i-2), 6.5, 0.5 , 0.25]
+		dynamic_obstacles.append(car)
+
+	for i in range(7):
+
+		car = [4.875, (i-2), 0.25, 0.5]
+		dynamic_obstacles.append(car)
+
+	for i in range(9,13):
+
+		car = [4.875, (i-2), 0.25, 0.5]
+		dynamic_obstacles.append(car)
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 	for filename in glob.glob(CURR_DIR + "/PRM_Images/*.png"):
 		 os.remove(filename)
 
-	graph_prm, x_array_prm, y_array_prm = prm(static_obstacles, N=2000, k=10)
+	graph_prm, x_array_prm, y_array_prm = prm(static_obstacles, N=2000, k=10, eps=0.1)
 	qinit, qgoal = pick_endpoints((0.5, 0.5), (8.5, 9.5), x_array_prm, y_array_prm) 
 	path_prm, total_cost = djikstra(qinit, qgoal, graph_prm, x_array_prm, y_array_prm)
 
 	converged = False
 
-	im = plt.imread('Ronnie.png') # insert local path of the image.
-
-	speed = 0.25
-	speed_obs1 = 0.1
+	speed = 0.3
+	speed_obs1 = 0.05
 	x_trajectory = [0.5]
 	y_trajectory = [0.5]
-	x_robot_len = 0.25
-	y_robot_len = 0.25
+	x_robot_len = 0.1
+	y_robot_len = 0.1
+
+	i = 0
+
+	print(dynamic_obstacles)
 
 	while not converged:
 
@@ -106,16 +128,16 @@ if __name__ == "__main__":
 		x_trajectory.append(x_cur)
 		y_trajectory.append(y_cur)
 
-		newax = fig.add_axes([0.8,0.8,0.2,0.2])
-		newax.imshow(im)
-		newax.axis('off')
-
 		# Move dynamic obstacle:
 
-		dynamic_obstacles[0][0] += speed_obs1
+		for c1 in range(20):
+			if c1 < 10:
+				dynamic_obstacles[c1][0] += speed_obs1
+			else:
+				dynamic_obstacles[c1][0] -= speed_obs1
 
 		plot_obstacles(static_obstacles, dynamic_obstacles, ax)
-		plt.plot(x_trajectory, y_trajectory, color="b", label="True Path", lw=1.0)
+		plt.plot(x_trajectory[:-1], y_trajectory[:-1], color="g", label="True Path", lw=1.0)
 		#plt.plot(x_trajectory, y_trajectory, color="g", label="True Path", lw=1.0)
 		#plt.plot(x_trajectory, y_trajectory, color="r", label="True Path", lw=1.0)
 		#plot_path(path, x_array_prm, y_array_prm, "g", ax, legend=False)
@@ -138,7 +160,7 @@ if __name__ == "__main__":
 
 		restore_nodes(graph_prm, x_array_prm, y_array_prm)
 
-	make_video()
+	make_video("/PRM_Images/*.png")
 
 	'''
 

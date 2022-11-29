@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-def remove_nodes(edges, x_array, y_array, obstacles):
+def remove_nodes(edges, x_array, y_array, obstacles, eps=0.1):
 
 	def is_valid_node(p, obstacles):
 		"""
@@ -18,8 +18,6 @@ def remove_nodes(edges, x_array, y_array, obstacles):
 				True or False (bool).
 
 		"""
-
-		eps = 0.35
 
 		for obstacle in obstacles:
 
