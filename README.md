@@ -17,3 +17,6 @@ Steps to run simulation:
 3. Open up any file that starts with the word "test"
 4. Run test files and the simulations will pop up. Note: Type of algorithm can be changed (Dijkstra and Astar).
 
+
+## Simulation Examples:
+
