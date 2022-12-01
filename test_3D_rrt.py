@@ -1,4 +1,4 @@
-# Test 1 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
+# Incomplete test attempting to change 2-D simulation into 3-D
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
 # Python standard libraries:
