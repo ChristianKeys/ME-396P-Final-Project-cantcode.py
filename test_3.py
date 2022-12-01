@@ -1,4 +1,4 @@
-# Test 1 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
+# Test 3 runs dijkstra and astar 
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
 # Python standard libraries:
