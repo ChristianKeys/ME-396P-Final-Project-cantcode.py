@@ -23,7 +23,7 @@ Steps to run simulation:
 ![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/PRM%20Gif.gif)
 
 ### RRT Basic Simulation
-![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/RRT%20Gif.gif)
+![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/RRT%20Gif.gif)
 
 ### Advanced PRM Simulation with Multiple Dynamic and Static Obstacles
 ![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/Advanced%20PRM.gif)
