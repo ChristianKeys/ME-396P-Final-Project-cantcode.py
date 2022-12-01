@@ -1,3 +1,5 @@
+#This test shows our RRT is formed
+
 # Python standard libraries:
 
 import matplotlib.pyplot as plt
