@@ -23,6 +23,9 @@ Steps to run simulation:
 ### PRM Roadmap Simulation
 ![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/PRM%20Generation.gif)
 
+### RRT Tree Simulation
+![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/RRT%20Generation.gif)
+
 ### PRM Basic Simulation
 ![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/PRM%20Gif.gif)
 
