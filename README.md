@@ -6,7 +6,7 @@ The purpose and goal of this project is to create a visual tool that depicts a r
 
 ## How to Run Simulations:
 
-External Packages Needed: Numpy, Matplotlib, Random, Time and Glob
+External Packages Needed: Numpy, Matplotlib, Random, Time and Glob/OS
 
 DISCLAIMER: YOU MUST DOWNLOAD ZIP FILE TO BE ABLE TO RUN ALL OF THE SIMULATIONS AS MANY LOCAL PACKAGES ARE PRESENT IN OUR PROJECT
 
