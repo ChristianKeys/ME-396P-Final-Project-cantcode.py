@@ -1,4 +1,4 @@
-# Test 3 runs dijkstra and astar 
+# Test 1 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
 # Python standard libraries:
@@ -6,6 +6,7 @@
 import matplotlib.pyplot as plt
 import random as rd
 import time
+import timeit
 
 # Our implementations of common path-planning algorithms:
 
@@ -29,6 +30,8 @@ from visualize_dynamic_planner import visualize_dynamic_planner
 
 if __name__ == "__main__":
 
+
+
 	# Define obstacles:
 
 	static_obstacles = [[1, 1, 2.5, 2.5],
@@ -37,23 +40,8 @@ if __name__ == "__main__":
 
 	dynamic_obstacles = [[5, 7, 3, 1]]
 
-	# static_obstacles.append(dynamic_obstacles[0]) 
-
-	# Test PRM:
-
-	graph, x_array, y_array, path = rrt(1000, static_obstacles, (0.5, 0.5), (9.5, 9.5), delta=0.5, eps=0.25)
-	fig1, ax1 = plt.subplots(1,1)
-	plot_graph(graph, x_array, y_array, ax1)
-	ax1.set_aspect(1)
-	plt.tick_params(left=False,bottom=False)
-	plt.xticks(color='w')
-	plt.yticks(color='w')
-	plt.axis([0, 10, 0, 10])
-	plt.show()
-
-	graph, x_array, y_array = prm(static_obstacles, N=2000, k=10)
-	qinit, qgoal = pick_endpoints((5, 4), (9.5, 9.5), x_array, y_array)
-
+	graph, x_array, y_array = prm(static_obstacles, N=1000, k=5)
+	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array)
 
 	begin1 = time.time()
 	path1, total_cost1 = djikstra(qinit, qgoal, graph, x_array, y_array)
@@ -67,8 +55,8 @@ if __name__ == "__main__":
 	print("Done! Time taken: " + "{:.5f}".format(end2-begin2) + "s. Path found!")
 
 
-	print(total_cost1)
-	print(total_cost2)
+	print("Total distance for Dijkstra is: " + "{:.5f}".format(total_cost1))
+	print("Total distance for Astar is: " + "{:.5f}".format(total_cost2))
 
 	# Plotting PRM:
 
