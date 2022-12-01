@@ -1,4 +1,4 @@
-#This test shows our RRT is formed
+#This test shows our PRM is formed
 
 # Python standard libraries:
 
