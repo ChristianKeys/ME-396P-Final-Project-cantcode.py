@@ -1,3 +1,4 @@
+#This file has a simulation which shows how RRT is formed
 # Python standard libraries:
 
 import matplotlib.pyplot as plt
