@@ -1,4 +1,4 @@
-# Test 2 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
+# Test 4 adds more dynamic and static obstacles to test validity of PRM
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
 # Python standard libraries:
