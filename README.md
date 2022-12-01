@@ -20,7 +20,7 @@ Steps to run simulation:
 
 ## Simulation Examples:
 ### PRM Basic Simulation
-![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/PRM%20Gif.gif)
+![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/Gif%20Examples/PRM%20Gif.gif)
 
 ### RRT Basic Simulation
 ![](https://github.com/ChristianKeys/ME-396P-Final-Project-cantcode.py/blob/main/RRT%20Gif.gif)
