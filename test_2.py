@@ -109,5 +109,5 @@ if __name__ == "__main__":
 
 		static_obstacles.pop()
 
-	#make_video()
+	make_video("/RRT_Images/*.png")
 
