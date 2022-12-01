@@ -14,8 +14,8 @@ Steps to run simulation:
 
 1. Download zip file from this repository
 2. Make sure all files from the repository are in the same folder
-3. Open up any file that starts with the word "test"
-4. Run test files and the simulations will pop up. Note: Type of algorithm can be changed (Dijkstra and Astar).
+3. For simulations, there are 7 files that we used. Those include "animate_PRM", "animate_RRT" and any file that includes the word "test_." For simplicity, those files have been placed in a sub-folder to organize which files must be ran to produce the working simulations that were presented in our final project.
+4. Run those files and the simulations will pop up. Note: Type of algorithm can be changed within the PRM code (Dijkstra and Astar). To change the type of algorithm, you must input astar=True for astar when the code calls the dijkstra function.
 
 
 ## Simulation Examples:
