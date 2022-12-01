@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
 	graph, x_array, y_array = prm(static_obstacles, N=500, k=5)
 	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array) 
-	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array)
+	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array, astar = False)
 
 	# Plotting PRM:
 
