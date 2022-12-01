@@ -6,7 +6,7 @@ from prm import prm
 from plot_path import plot_path
 from visualize_dynamic_planner import visualize_dynamic_planner 
 
-def djikstra(qinit, qgoal, graph, x_array, y_array, astar=False):
+def djikstra(qinit, qgoal, graph, x_array, y_array, astar=False):  #If you want to use Astar, you must set astar = true
 
 	def heuristic(q1, q2):
 
