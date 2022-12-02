@@ -23,6 +23,16 @@ Test 1: concerned with validating our implementations of PRM, RRT, and Dijkstra.
 
 Test 2: concerned with testing a new and more flexible animation framework.
 
+Test 3: concerned with comparing our Dijkstra and Astar implementations by choosing a consistent heuristic.
+
+Test 4: concerned with addding more dynamic and static obstacles to test validity of our PRM approach.
+
+Test 5: is a real life simulation of the UT Campus.
+
+Test "6" (animate_prm.py): Concerned with simulating how PRM is formed.
+
+Test "7" (animate_rrt.py): Concerned with simulating how RRT is formed.
+
 ## Simulation Examples:
 
 ### PRM Roadmap Simulation
