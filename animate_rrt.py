@@ -1,4 +1,5 @@
-#This file has a simulation which shows how RRT is formed
+# This file has a simulation which shows how RRT is formed.
+
 # Python standard libraries:
 
 import matplotlib.pyplot as plt
@@ -26,20 +27,23 @@ from remove_nodes import remove_nodes
 from restore_nodes import restore_nodes
 from make_video import make_video
 
-def animate_prm(static_obstacles, dynamic_obstacles, graph, x_array, y_array, ax):
+def animate_rrt(static_obstacles, dynamic_obstacles, graph, x_array, y_array, ax):
 
 	plt.sca(ax)
 
 	N = len(x_array)
 
+	j = 0
+
 	for i in range(N):
 
 		plt.scatter(x_array[i], y_array[i], color="red", s = 25, zorder=2)
-		plt.savefig("PRM_Prog/Step" + str(i))
+		plt.savefig("RRT_Prog/Step" + str(i))
 
-	for j in range(N):
+		if i == N-1:
+			break
 
-		edge = graph[j]
+		edge = graph[i]
 
 		for idx in edge:
 
@@ -47,21 +51,21 @@ def animate_prm(static_obstacles, dynamic_obstacles, graph, x_array, y_array, ax
 
 				if edge[idx] == float("Inf"):
 
-					plt.plot([x_array[j], x_array[idx]], [y_array[j], y_array[idx]], 
+					plt.plot([x_array[i], x_array[idx]], [y_array[i], y_array[idx]], 
 					color="k", alpha=0.2, zorder=1, linestyle='dashed')
 
 				else:
-					plt.plot([x_array[j], x_array[idx]], [y_array[j], y_array[idx]],
+					plt.plot([x_array[i], x_array[idx]], [y_array[i], y_array[idx]],
 					color="k", alpha=0.2, zorder=1)
 
-				plt.savefig("PRM_Prog/Step" + str(i+j))
-
-	return
+				plt.savefig("RRT_Prog/Step" + str(i+j))
+				print(j)
+				j += 1
 
 if __name__ == "__main__":
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
-	for filename in glob.glob(CURR_DIR + "/PRM_Prog/*.png"):
+	for filename in glob.glob(CURR_DIR + "/RRT_Prog/*.png"):
 		 os.remove(filename)
 
 	static_obstacles = [[1, 1, 2.5, 2.5],
@@ -72,11 +76,12 @@ if __name__ == "__main__":
 
 	# Test RRT:
 
-	graph, x_array, y_array = prm(static_obstacles, N=250, k=3)
+	graph, x_array, y_array, path = rrt(1000, static_obstacles, (5.0, 5.0), (9.5, 9.5), delta=1.0, eps=0.25)
 
 	# Plotting RRT:
 
 	fig1, ax1 = plt.subplots(1,1)
+
 	plot_obstacles(static_obstacles, dynamic_obstacles, ax1)
-	animate_prm(static_obstacles, dynamic_obstacles, graph, x_array, y_array, ax1)
-	make_video()
+	animate_rrt(static_obstacles, dynamic_obstacles, graph, x_array, y_array, ax1)
+	make_video("/RRT_Prog/*.png", "rrt_prog")
