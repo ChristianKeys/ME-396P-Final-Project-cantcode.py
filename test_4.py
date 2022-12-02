@@ -1,4 +1,4 @@
-# Test 2 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
+# Test 4 adds more dynamic and static obstacles to test validity of our PRM approach.
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
 # Python standard libraries:
@@ -28,14 +28,10 @@ from remove_nodes import remove_nodes
 from restore_nodes import restore_nodes
 from make_video import make_video
 
-# Dynamic visualizer, leading into Test 2 material:
-
-from visualize_dynamic_planner import visualize_dynamic_planner
-
 if __name__ == "__main__":
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
-	for filename in glob.glob(CURR_DIR + "/PRM_Images/*.png"):
+	for filename in glob.glob(CURR_DIR + "/test4/*.png"):
 		 os.remove(filename)
 
 	converged = False
@@ -46,7 +42,7 @@ if __name__ == "__main__":
 	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array_prm, y_array_prm) 
 	path_prm, total_cost = djikstra(qinit, qgoal, graph_prm, x_array_prm, y_array_prm)
 
-	speed = 0.25/2
+	speed = 0.25
 	t = 0
 	dt = 1
 	i = 0
@@ -68,7 +64,7 @@ if __name__ == "__main__":
 		for d_obs in dynamic_obstacles:
 			static_obstacles.append(d_obs)
 
-		remove_nodes(graph_prm, x_array_prm, y_array_prm, dynamic_obstacles)
+		remove_nodes(graph_prm, x_array_prm, y_array_prm, dynamic_obstacles, eps=0.2)
 
 		x_cur = x_trajectory[i]
 		y_cur = y_trajectory[i]
@@ -119,7 +115,7 @@ if __name__ == "__main__":
 
 		step = '{:03d}'.format(i)
 
-		plt.savefig("PRM_Images/Step" + step)
+		plt.savefig("test4/Step" + step)
 		plt.close()
 		print(i)
 		ax.patches.pop()
@@ -134,4 +130,4 @@ if __name__ == "__main__":
 
 		restore_nodes(graph_prm, x_array_prm, y_array_prm)
 
-	#make_video()
+	make_video("/test4/*.png", "test4")

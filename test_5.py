@@ -30,10 +30,6 @@ from remove_nodes import remove_nodes
 from restore_nodes import restore_nodes
 from make_video import make_video
 
-# Dynamic visualizer, leading into Test 2 material:
-
-from visualize_dynamic_planner import visualize_dynamic_planner
-
 if __name__ == "__main__":
 
 	# Define obstacles:
@@ -73,16 +69,16 @@ if __name__ == "__main__":
 		dynamic_obstacles.append(car)
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
-	for filename in glob.glob(CURR_DIR + "/PRM_Images/*.png"):
+	for filename in glob.glob(CURR_DIR + "/test5/*.png"):
 		 os.remove(filename)
 
-	graph_prm, x_array_prm, y_array_prm = prm(static_obstacles, N=2000, k=10, eps=0.1)
+	graph_prm, x_array_prm, y_array_prm = prm(static_obstacles, N=3000, k=10, eps=0.25)
 	qinit, qgoal = pick_endpoints((0.5, 0.5), (8.5, 9.5), x_array_prm, y_array_prm) 
 	path_prm, total_cost = djikstra(qinit, qgoal, graph_prm, x_array_prm, y_array_prm)
 
 	converged = False
 
-	speed = 0.3
+	speed = 0.2
 	speed_obs1 = 0.05
 	x_trajectory = [0.5]
 	y_trajectory = [0.5]
@@ -90,8 +86,6 @@ if __name__ == "__main__":
 	y_robot_len = 0.1
 
 	i = 0
-
-	print(dynamic_obstacles)
 
 	while not converged:
 
@@ -145,7 +139,7 @@ if __name__ == "__main__":
 
 		step = '{:03d}'.format(i)
 
-		plt.savefig("PRM_Images/Step" + step)
+		plt.savefig("test5/Step" + step)
 		plt.close()
 		print(i)
 		ax.patches.pop()
@@ -160,45 +154,4 @@ if __name__ == "__main__":
 
 		restore_nodes(graph_prm, x_array_prm, y_array_prm)
 
-	make_video("/PRM_Images/*.png")
-
-	'''
-
-	# Test PRM:
-
-	graph, x_array, y_array = prm(static_obstacles, N=500, k=5)
-	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array) 
-	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array)
-
-	# Plotting PRM:
-
-	print("Running PRM...")
-	begin = time.time()
-
-	fig2, ax2 = plt.subplots(1,1)
-	plot_obstacles(static_obstacles, dynamic_obstacles, ax2)
-	plot_graph(graph, x_array, y_array, ax2)
-	plot_path(path, x_array, y_array, "g", ax2)
-	plt.title("PRM")
-
-	end = time.time()
-	print("Done! Time taken: " + "{:.2f}".format(end-begin) + "s. Path found!") 
-
-	# Test dynamic visualizer using PRM result:
-
-	print("Running animation...")
-	begin = time.time()
-
-	fig3, ax3 = plt.subplots(1,1)
-	plot_obstacles(static_obstacles, dynamic_obstacles, ax3)
-	plot_path(path, x_array, y_array, "g", ax3)
-
-	# Testing dynamic visualization using PRM result:
-
-	visualize_dynamic_planner(qinit, qgoal, path, x_array, y_array, fig3, ax3)
-	end = time.time()
-	print("Done! Time taken: " + "{:.2f}".format(end-begin) + "s. Results being displayed...") 
-	plt.show()
-	print("Script terminated!")
-
-	'''
+	make_video("/test5/*.png", "test5")
