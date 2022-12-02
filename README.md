@@ -14,8 +14,8 @@ Steps to run simulation:
 
 1. Download zip file from this repository
 2. Make sure all files from the repository are in the same folder
-3. For simulations, there are 7 files that we used. Those include "animate_PRM", "animate_RRT" and any file that includes the word "test_."
-4. Run those files and the simulations will pop up. Note: Type of algorithm can be changed within the PRM code (Dijkstra and Astar). To change the type of algorithm, you must input astar=True for astar when the code calls the dijkstra function.
+3. For simulations, there are 7 files used. Those include "animate_PRM", "animate_RRT" and any file that includes the word "test_".
+4. Run those files and the simulations will pop up. Note: type of algorithm can be changed within the PRM code (Dijkstra and Astar). To change the type of algorithm, you must input astar=True for astar when the code calls the dijkstra function.
 
 5. Quick breakdown of each test and the expected results:
 
@@ -55,10 +55,10 @@ Test "7" (animate_rrt.py): concerned with simulating how RRT is formed.
 
 ## Future Implementation of Code:
 
-The potential for this project goes much further than what was done. Our group was constrained with time due to this being a project for a class. However, there are some certain portions that have been started or thought about that can be implemented into future work that goes way beyond this simulation. These include, but are not limited to:
+The potential for this project goes much further than what was done. Our group was constrained with time due to this being a project for a class. However, there are  certain portions that have been started or thought about that can be implemented into future work that goes beyond this simulation. These include, but are not limited to:
 
-1. Implement our code into 3-D. The code is started, however the objects are not created for a 3-dimensions.
-2. Change shape of objects so that they are not all rectangular.
+1. Implement our code into 3-D. The code is started, however the objects are not created for a 3-dimensions
+2. Change shape of objects so that they are not all rectangular
 3. Incorporate speed actuation
 4. Add uncertainty to obstacles trajectory
 
