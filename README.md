@@ -25,7 +25,7 @@ Test 2: concerned with testing a new and more flexible animation framework.
 
 Test 3: concerned with comparing our Dijkstra and Astar implementations by choosing a consistent heuristic.
 
-Test 4: concerned with addding more dynamic and static obstacles to test validity of our PRM approach.
+Test 4: concerned with adding more dynamic and static obstacles to test validity of our PRM approach.
 
 Test 5: is a real life simulation of the UT Campus.
 
