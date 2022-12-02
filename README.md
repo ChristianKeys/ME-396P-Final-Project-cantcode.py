@@ -14,10 +14,10 @@ Steps to run simulation:
 
 1. Download zip file from this repository
 2. Make sure all files from the repository are in the same folder
-3. For simulations, there are 7 files that we used. Those include "animate_PRM", "animate_RRT" and any file that includes the word "test_." For simplicity, those files have been placed in a sub-folder to organize which files must be ran to produce the working simulations that were presented in our final project.
+3. For simulations, there are 7 files that we used. Those include "animate_PRM", "animate_RRT" and any file that includes the word "test_."
 4. Run those files and the simulations will pop up. Note: Type of algorithm can be changed within the PRM code (Dijkstra and Astar). To change the type of algorithm, you must input astar=True for astar when the code calls the dijkstra function.
 
-Quick breakdown of each test and the expected results:
+5. Quick breakdown of each test and the expected results:
 
 Test 1: concerned with validating our implementations of PRM, RRT, and Dijkstra. Two images and a GIF should pop up on the screen.
 
@@ -25,7 +25,7 @@ Test 2: concerned with testing a new and more flexible animation framework.
 
 Test 3: concerned with comparing our Dijkstra and Astar implementations by choosing a consistent heuristic.
 
-Test 4: concerned with adding more dynamic and static obstacles to test validity of our PRM approach.
+Test 4: concerned with addding more dynamic and static obstacles to test validity of our PRM approach.
 
 Test 5: is a real life simulation of the UT Campus.
 
