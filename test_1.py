@@ -1,6 +1,9 @@
 # Test 1 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
+# Note that visualize_dynamic_planner became obsolete since the prefered method to generate GIFs 
+# changed as the project evolved.
+
 # Python standard libraries:
 
 import matplotlib.pyplot as plt
@@ -32,17 +35,17 @@ if __name__ == "__main__":
 	# Define obstacles:
 
 	static_obstacles = [[1, 1, 2.5, 2.5],
-			   [4, 7, 1, 1],
-			   [8, 3, 1, 5]]
+					   [4, 7, 1, 1],
+					   [8, 3, 1, 5]]
 
-	dynamic_obstacles = [[5, 7, 3, 1, "d"]]
+	dynamic_obstacles = [[5, 7, 3, 1]]
 
 	# Test RRT:
 
 	print("Running RRT...")
 	begin = time.time()
 
-	graph, x_array, y_array, path = rrt(1000, static_obstacles, (0.5, 0.5), (9.5, 9.5), delta = 0.5, eps = 0.25)
+	graph, x_array, y_array, path = rrt(1000, static_obstacles, (0.5, 0.5), (9.5, 9.5), delta=0.5, eps=0.25)
 
 	# Plotting RRT:
 
@@ -61,8 +64,8 @@ if __name__ == "__main__":
 	# Test PRM:
 
 	graph, x_array, y_array = prm(static_obstacles, N=500, k=5)
-	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array)
-	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array, astar = False)
+	qinit, qgoal = pick_endpoints((0.5, 0.5), (9.5, 9.5), x_array, y_array) 
+	path, total_cost = djikstra(qinit, qgoal, graph, x_array, y_array)
 
 	# Plotting PRM:
 

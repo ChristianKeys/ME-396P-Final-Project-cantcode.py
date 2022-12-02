@@ -3,7 +3,7 @@ import numpy as np
 import glob
 import os
 
-def make_video(path):
+def make_video(path, savename):
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,8 +13,8 @@ def make_video(path):
 		new_frame = Image.open(filename)
 		frames.append(new_frame)
 
-	frames[0].save("png_to_gif.gif", format="GIF", append_images=frames[1:], save_all=True, loop=0)
+	frames[0].save(savename + ".gif", format="GIF", append_images=frames[1:], save_all=True, loop=0)
 
 if __name__ == "__main__":
 
-	make_video("/PRM_Images/*.png")
+	make_video()

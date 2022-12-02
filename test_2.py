@@ -1,4 +1,4 @@
-# Test 2 is concerned with validating our implementations of PRM, RRT, and Dijkstra
+# Test 2 is concerned with testing a new and more flexible animation framework.
 # It also makes extensive use our own plotting and animation functions to visualize the results.
 
 # Python standard libraries:
@@ -26,14 +26,10 @@ from plot_path import plot_path
 from pick_endpoints import pick_endpoints
 from make_video import make_video
 
-# Dynamic visualizer, leading into Test 2 material:
-
-from visualize_dynamic_planner import visualize_dynamic_planner
-
 if __name__ == "__main__":
 
 	CURR_DIR = os.path.dirname(os.path.realpath(__file__))
-	for filename in glob.glob(CURR_DIR + "/RRT_Images/*.png"):
+	for filename in glob.glob(CURR_DIR + "/test2/*.png"):
 		 os.remove(filename)
 
 	converged = False
@@ -97,7 +93,7 @@ if __name__ == "__main__":
 
 		step = '{:03d}'.format(i)
 
-		plt.savefig("RRT_Images/Step" + step)
+		plt.savefig("test2/Step" + step)
 		plt.close()
 		print(i)
 		ax.patches.pop()
@@ -109,5 +105,5 @@ if __name__ == "__main__":
 
 		static_obstacles.pop()
 
-	make_video("/RRT_Images/*.png")
+	make_video("/test2/*.png", "test2")
 
