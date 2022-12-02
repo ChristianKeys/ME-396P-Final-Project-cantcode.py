@@ -17,6 +17,10 @@ Steps to run simulation:
 3. For simulations, there are 7 files that we used. Those include "animate_PRM", "animate_RRT" and any file that includes the word "test_." For simplicity, those files have been placed in a sub-folder to organize which files must be ran to produce the working simulations that were presented in our final project.
 4. Run those files and the simulations will pop up. Note: Type of algorithm can be changed within the PRM code (Dijkstra and Astar). To change the type of algorithm, you must input astar=True for astar when the code calls the dijkstra function.
 
+Quick breakdown of each test and the expected results:
+
+Test 1: concerned with validating our implementations of PRM, RRT, and Dijkstra. Two images and a GIF should pop up on the screen.
+Test 2: concerned with testing a new and more flexible animation framework.
 
 ## Simulation Examples:
 
