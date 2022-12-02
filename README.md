@@ -20,6 +20,7 @@ Steps to run simulation:
 Quick breakdown of each test and the expected results:
 
 Test 1: concerned with validating our implementations of PRM, RRT, and Dijkstra. Two images and a GIF should pop up on the screen.
+
 Test 2: concerned with testing a new and more flexible animation framework.
 
 ## Simulation Examples:
