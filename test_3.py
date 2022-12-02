@@ -1,12 +1,10 @@
-# Test 1 is concerned with validating our implementations of PRM, RRT, and Dijkstra.
-# It also makes extensive use our own plotting and animation functions to visualize the results.
+# Test 3 is concerned with comparing our Dijkstra and Astar implementations by choosing a consistent heuristic.
 
 # Python standard libraries:
 
 import matplotlib.pyplot as plt
 import random as rd
 import time
-import timeit
 
 # Our implementations of common path-planning algorithms:
 
@@ -24,13 +22,7 @@ from plot_path import plot_path
 
 from pick_endpoints import pick_endpoints
 
-# Dynamic visualizer, leading into Test 2 material:
-
-from visualize_dynamic_planner import visualize_dynamic_planner
-
 if __name__ == "__main__":
-
-
 
 	# Define obstacles:
 
@@ -58,11 +50,13 @@ if __name__ == "__main__":
 	print("Total distance for Dijkstra is: " + "{:.5f}".format(total_cost1))
 	print("Total distance for Astar is: " + "{:.5f}".format(total_cost2))
 
+	if total_cost1 == total_cost2:
+		print("The distances are identical! The heuristic is consistent!")
+
 	# Plotting PRM:
 
 	fig1, ax1 = plt.subplots(1,1)
 	plot_obstacles(static_obstacles, dynamic_obstacles, ax1)
 	plot_graph(graph, x_array, y_array, ax1)
 	plot_path(path1, x_array, y_array, "g", ax1)
-	plot_path(path2, x_array, y_array, "c", ax1)
 	plt.show()
