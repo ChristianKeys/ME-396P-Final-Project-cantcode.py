@@ -29,9 +29,9 @@ Test 4: concerned with addding more dynamic and static obstacles to test validit
 
 Test 5: is a real life simulation of the UT Campus.
 
-Test "6" (animate_prm.py): Concerned with simulating how PRM is formed.
+Test "6" (animate_prm.py): concerned with simulating how PRM is formed.
 
-Test "7" (animate_rrt.py): Concerned with simulating how RRT is formed.
+Test "7" (animate_rrt.py): concerned with simulating how RRT is formed.
 
 ## Simulation Examples:
 
